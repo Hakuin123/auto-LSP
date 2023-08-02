@@ -36,3 +36,8 @@ jobs:
           echo test, and deploy your project.
           pwd
           ls -a
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: $PWD
