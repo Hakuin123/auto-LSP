@@ -25,12 +25,26 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # 配置JAVA JDK环境
+      - name: Setup Java JDK 
+        uses: actions/setup-java@v3.12.0
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # 下载LSPatch
+      - name: Download LSPatch
+        run: wget https://github.com/LSPosed/LSPatch/releases/latest/download/lspatch.jar
+
+      # 下载待修补的应用
+      - name: 下载待修补的应用
+        run: wget -O app.apk https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
+
+      # 下载模块
+      - name: 下载模块
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          wget -O XAutoDaily.apk https://github.com/LuckyPray/XAutoDaily/releases/download/v3.0.19/XAutoDaily_3.0.19.apk
+          wget -O QAuxiliary.apk https://github.com/cinit/QAuxiliary/releases/download/v1.4.2/QAuxv-v1.4.2.r1659.fd171b1-arm64.apk
+          wget -O TSBattery.apk https://github.com/fankes/TSBattery/releases/latest/download/app-release.apk
+          wget -O QQCleaner.apk https://github.com/KitsunePie/QQCleaner/releases/latest/download/app-release.apk
+
+      # 修补
+      - name: RUN
+        run: java -jar lspatch.jar app.apk -m XAutoDaily.apk QAuxiliary.apk TSBattery.apk QQCleaner.apk
