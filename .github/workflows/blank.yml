@@ -35,7 +35,7 @@ jobs:
 
       # 下载待修补的应用
       - name: 下载待修补的应用
-        run: wget -O app.apk https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
+        run: wget -O QQ8.9.58.apk https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
 
       # 下载模块
       - name: 下载模块
@@ -47,9 +47,9 @@ jobs:
 
       # 修补
       - name: RUN
-        run: java -jar lspatch.jar app.apk -m XAutoDaily.apk QAuxiliary.apk TSBattery.apk QQCleaner.apk
+        run: java -jar lspatch.jar QQ8.9.58.apk -m XAutoDaily.apk QAuxiliary.apk TSBattery.apk QQCleaner.apk
 
       - uses: actions/upload-artifact@v3
         with:
           name: 上传修补完成的文件
-          path: .
+          path: QQ8.9.58-360-lspatched.apk
