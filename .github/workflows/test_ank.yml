@@ -34,6 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          echo "hello word"> test.txt
           pwd
           ls -a
           
