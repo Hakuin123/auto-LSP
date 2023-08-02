@@ -48,3 +48,8 @@ jobs:
       # 修补
       - name: RUN
         run: java -jar lspatch.jar app.apk -m XAutoDaily.apk QAuxiliary.apk TSBattery.apk QQCleaner.apk
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: /
