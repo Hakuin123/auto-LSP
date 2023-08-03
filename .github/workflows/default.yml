@@ -97,3 +97,4 @@ jobs:
           tag_name: Release
           name: QQ Release
           body: 仅在此发布最新修补的Release版本
+          append_body: true
