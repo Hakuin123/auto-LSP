@@ -54,5 +54,5 @@ jobs:
       - name: 上传修补完成的文件
         uses: actions/upload-artifact@v3
         with:
-          name: QQ-8.9.58${{ inputs.version }}-Release
+          name: QQ-${{ inputs.version }}-Release
           path: QQ-custom-360-lspatched.apk
