@@ -57,4 +57,4 @@ jobs:
           tag_name: Release
           release_name: QQ Release
           
-      - run: echo ${{GITHUB_RUN_ATTEMPT}}
+      - run: echo ${GITHUB_REF}
