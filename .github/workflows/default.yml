@@ -70,7 +70,7 @@ jobs:
       - name: 下载最新版QQ
       # 官方直链  run: wget -O QQ8.9.58. https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
       # 由于QQ官方未给出固定链接，故使用酷安提供下载（豌豆荚有固定链接但更新不及时）
-      run: wget -O QQ-latest.apk https://dl.coolapk.com/down?pn=com.tencent.mobileqq&id=MzgzNA&h=aefedf55ryt58j
+        run: wget -O QQ-latest.apk https://dl.coolapk.com/down?pn=com.tencent.mobileqq&id=MzgzNA&h=aefedf55ryt58j
 
       # 使用GitHub CLI下载模块最新Release版本
       - name: 下载模块
