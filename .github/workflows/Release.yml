@@ -39,7 +39,7 @@ jobs:
 
       # 修补
       - name: RUN
-        run: java -jar lspatch.jar QQ-8.9.58.apk -m QAuxiliary.apk,XAutoDaily.apk,QAuxiliary.apk,TSBattery.apk,QQCleaner.apk
+        run: java -jar lspatch.jar QQ-8.9.58.apk -m QAuxiliary.apk,XAutoDaily.apk,TSBattery.apk,QQCleaner.apk
 
 
       # 上传修补完成的文件
@@ -52,6 +52,5 @@ jobs:
       # 提交Release以便下载
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: QQ-8.9.58-360-lspatched.apk
