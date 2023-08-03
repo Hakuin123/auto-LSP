@@ -1,14 +1,16 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Releases
 
 # 控制工作流何时运行
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-#  push:
-#    branches: [ "main" ]
-#  pull_request:
-#    branches: [ "main" ]
+  repository_dispatch:
+    types:
+      - LSPosed_LSPatch_update
+      - KitsunePie_QQCleaner_update
+      - fankes_TSBattery_update
+      - cinit_QAuxiliary_update
+      - LuckyPray_XAutoDaily_update
 
   # 允许手动运行工作流
   workflow_dispatch:
