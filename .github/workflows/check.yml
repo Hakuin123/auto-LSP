@@ -1,7 +1,7 @@
 name: Check for updates
 on:
-  schedule:
-    - cron: '0 * * * *' # run every hour 每小时运行
+  #schedule:
+  #  - cron: '0 * * * *' # run every hour 每小时运行
   workflow_dispatch: # 允许手动运行工作流
 
 jobs:
