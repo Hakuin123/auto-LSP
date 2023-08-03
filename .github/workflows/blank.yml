@@ -2,33 +2,21 @@
 
 name: CI
 
-# Controls when the workflow will run 控制工作流何时运行
+# 控制工作流何时运行
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
+#  push:
+#    branches: [ "main" ]
 #  pull_request:
 #    branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions ta
+  # 允许手动运行工作流
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # 配置JAVA JDK环境
-      # - name: Setup Java JDK 
-      #   uses: actions/setup-java@v3.12.0
-
       # 下载LSPatch
       - name: Download LSPatch
         run: wget https://github.com/LSPosed/LSPatch/releases/latest/download/lspatch.jar
@@ -48,11 +36,11 @@ jobs:
 
       # 修补
       - name: RUN
-        run: java -jar lspatch.jar QQ8.9.58.apk -m XAutoDaily.apk -m QAuxiliary.apk -m TSBattery.apk -m QQCleaner.apk
+        run: java -jar lspatch.jar QQ8.9.58.apk -m {"XAutoDaily.apk","QAuxiliary.apk","TSBattery.apk","QQCleaner.apk"}
 
-      - run: java -jar lspatch.jar
 
       # 上传修补完成的文件
       - uses: actions/upload-artifact@v3
         with:
+          name: QQ8.9.58-360-lspatched.apk
           path: QQ8.9.58-360-lspatched.apk
