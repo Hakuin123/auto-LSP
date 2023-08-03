@@ -13,7 +13,7 @@ jobs:
         with:
           script: | # 编写 JavaScript 代码
             const repos = ['cinit/QAuxiliary', 'LuckyPray/XAutoDaily', 'KitsunePie/QQCleaner', 'fankes/TSBattery']; # 定义一个数组，存储要监听的仓库的名称
-            // You can store the last seen release tag for each repo in a file or an environment variable
+            // 将每个repo最后一次看到的发布标记存储在文件或环境变量中
             const lastSeen = {
               'cinit/QAuxiliary': 'v1.0.0',
               'LuckyPray/XAutoDaily': 'v1.0.0',
@@ -36,7 +36,6 @@ jobs:
                   owner: 'Hakuin123', # 指定目标仓库的所有者
                   repo: 'auto-LSP', # 指定目标仓库的名称
                   event_type: 'new-release', # 指定事件类型，可以自定义
-                  //}
                 });
               }
             }
