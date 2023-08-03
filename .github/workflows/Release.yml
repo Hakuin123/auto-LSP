@@ -61,7 +61,6 @@ jobs:
   build-latest:
     runs-on: ubuntu-latest
     steps:
-      # 下载LSPatch
       - name: Download LSPatch
         run: gh release download --repo LSPosed/LSPatch --pattern lspatch.jar
 
