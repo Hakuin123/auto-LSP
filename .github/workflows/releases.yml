@@ -5,12 +5,7 @@ name: Releases
 # 控制工作流何时运行
 on:
   repository_dispatch:
-    types:
-      - LSPosed_LSPatch_update
-      - KitsunePie_QQCleaner_update
-      - fankes_TSBattery_update
-      - cinit_QAuxiliary_update
-      - LuckyPray_XAutoDaily_update
+    types: [new-release]
 
   # 允许手动运行工作流
   workflow_dispatch:

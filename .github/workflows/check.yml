@@ -5,45 +5,38 @@ on:
   workflow_dispatch: # 允许手动运行工作流
 
 jobs:
-  poll_releases:
-    runs-on: ubuntu-latest
+  listen_job:
+    runs-on: ubuntu-latest # 指定运行工作流的虚拟环境
     steps:
-      - name: Poll releases
-        uses: actions/github-script@v6.3.1
+      - name: Get latest release info # 定义一个步骤的名称
+        uses: actions/github-script@v5 # 使用 actions/github-script 来运行 JavaScript 代码
         with:
-          script: |
-            // get the latest release of your repo
-            const my_repo = await github.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            const my_repo_latest = my_repo.data[0];
-            const my_repo_date = new Date(my_repo_latest.created_at);
-
-            // define an array of repos to watch
-            const repos = [
-              { owner: 'LSPosed', repo: 'LSPatch' },
-              { owner: 'KitsunePie', repo: 'QQCleaner' },
-              { owner: 'fankes', repo: 'TSBattery' },
-              { owner: 'cinit', repo: 'QAuxiliary' },
-              { owner: 'LuckyPray', repo: 'XAutoDaily' }
-            ];
-
-            // loop through the repos and compare their releases with yours
-            for (const repo of repos) {
-              // get the latest release of the repo
-              const other_repo = await github.repos.listReleases(repo);
-              const other_repo_latest = other_repo.data[0];
-
-              // compare the created_at dates of the two releases
-              const other_repo_date = new Date(other_repo_latest.created_at);
-
-              // if the other repo release is newer, trigger the repository_dispatch event
-              if (other_repo_date > my_repo_date) {
-                await github.request('POST /repos/{owner}/{repo}/dispatches', {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  event_type: `${repo.owner}_${repo.repo}_update`
+          script: | # 编写 JavaScript 代码
+            const repos = ['cinit/QAuxiliary', 'LuckyPray/XAutoDaily', 'KitsunePie/QQCleaner', 'fankes/TSBattery']; # 定义一个数组，存储要监听的仓库的名称
+            // You can store the last seen release tag for each repo in a file or an environment variable
+            const lastSeen = {
+              'cinit/QAuxiliary': 'v1.0.0',
+              'LuckyPray/XAutoDaily': 'v1.0.0',
+              'KitsunePie/QQCleaner': 'v1.0.0',
+              'fankes/TSBattery': 'v1.0.0'
+            }; # 定义一个对象，存储每个仓库最后一次看到的 release 标签
+            for (const repo of repos) { # 遍历仓库数组
+              const [owner, name] = repo.split('/'); # 从仓库名称中分离出所有者和名称
+              const response = await github.repos.getLatestRelease({ # 调用 GitHub API 来获取最新的 release 信息
+                owner,
+                repo: name
+              });
+              console.log(`Latest release for ${repo}: ${response.data.tag_name}`); # 打印最新的 release 标签
+              // 将最新发布的标签与上次看到的标签进行比较
+              if (response.data.tag_name !== lastSeen[repo]) { # 如果最新的 release 标签和最后一次看到的不一样，说明有更新
+                // Update the last seen release tag
+                lastSeen[repo] = response.data.tag_name; # 更新最后一次看到的 release 标签
+                // 向目标仓库发送repository_dispatch事件
+                await github.repos.createDispatchEvent({ # 调用 GitHub API 来发送一个 repository_dispatch 事件到目标仓库
+                  owner: 'Hakuin123', # 指定目标仓库的所有者
+                  repo: 'auto-LSP', # 指定目标仓库的名称
+                  event_type: 'new-release', # 指定事件类型，可以自定义
+                  //}
                 });
               }
             }
