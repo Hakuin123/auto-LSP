@@ -14,7 +14,7 @@ on:
         required: true
         type: string
       channel:
-        description: '模块版本通道'
+        description: '模块版本通道（暂不支持CI）'
         required: true
         type: choice
         options:
@@ -65,3 +65,10 @@ jobs:
         with:
           name: QQ-${{ inputs.version }}-Release
           path: QQ-custom-360-lspatched.apk
+
+
+  build-ci:
+    if: inputs.channel == 'CI'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo '这玩意还没做好，别用'
