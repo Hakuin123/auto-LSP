@@ -40,7 +40,8 @@ jobs:
 
 
       # 上传修补完成的文件
-      - uses: actions/upload-artifact@v3
+      - name: 上传修补完成的文件
+        uses: actions/upload-artifact@v3
         with:
           name: QQ8.9.58-360-lspatched.apk
           path: QQ8.9.58-360-lspatched.apk
