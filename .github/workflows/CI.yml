@@ -1,4 +1,4 @@
-name: Release
+name: CI
 
 # 控制工作流何时运行
 on:
@@ -6,7 +6,7 @@ on:
   #  branches: [ "main" ]
 
   repository_dispatch:
-    types: [release]
+    types: [ci]
 
   # 允许手动运行工作流
   workflow_dispatch:
