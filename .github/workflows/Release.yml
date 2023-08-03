@@ -49,8 +49,9 @@ jobs:
       #    name: QQ-8.9.58-Release
       #    path: QQ-8.9.58-360-lspatched.apk
 
-      #- name: Release
-      #  uses: softprops/action-gh-release@v1
-      #  i-f: startsWith(github.ref, 'refs/tags/')
-      #  with:
-      #    files: QQ-8.9.58-360-lspatched.apk
+      # 提交Release以便下载
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        i-f: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: QQ-8.9.58-360-lspatched.apk
