@@ -36,11 +36,9 @@ jobs:
           ls -a
       
       - run: |
-          workflow_id=$(gh workflow list | grep main | cut -f1)
-          echo "workflow_id: $workflow_id"
-          run_id=$(gh run list -w $workflow_id --json id,created_at | jq -r 'sort_by(.created_at) | reverse | .[0].id')
-          echo "run_id: $run_id"
-          gh run download "$run_id" -p "*.arm64.apk"
+          curl -L -H "Authorization: token $token" -o action_file.zip $(curl -H "Authorization: token $token" https://api.github.com/repos/$owner/$repo/actions/runs/$(gh run list -w $(gh workflow list | grep main | cut -f1) --json id,created_at | jq -r 'sort_by(.created_at) | reverse | .[0].id')/artifacts | jq -r '.artifacts[].archive_download_url')
+
+
 
         
         
