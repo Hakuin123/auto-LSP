@@ -2,15 +2,14 @@ name: Check for updates
 on:
   schedule:
     - cron: '0 * * * *' # run every hour 每小时运行
-    # 允许手动运行工作流
-  workflow_dispatch:
+  workflow_dispatch: # 允许手动运行工作流
 
 jobs:
   poll_releases:
     runs-on: ubuntu-latest
     steps:
       - name: Poll releases
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6.3.1
         with:
           script: |
             // get the latest release of your repo
