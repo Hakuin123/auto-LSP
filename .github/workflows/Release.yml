@@ -17,6 +17,8 @@ jobs:
       # 下载LSPatch
       - name: Download LSPatch
         run: gh release download --repo LSPosed/LSPatch --pattern lspatch.jar
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 下载待修补的应用
       - name: 下载待修补的应用
