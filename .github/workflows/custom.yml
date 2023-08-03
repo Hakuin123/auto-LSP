@@ -13,18 +13,22 @@ on:
         description: '指定下载链接（直链）'
         required: true
         type: string
-      ci:
-        description: '是否采用CI版本模块构建'
-        required: false
-        type: boolean
-        default: false
+      channel:
+        description: '模块版本通道'
+        required: true
+        type: choice
+        options:
+          - default
+          - CI
+        default: 'default'
       
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  build:
+  build-default:
+    if: inputs.channel == 'default'
     runs-on: ubuntu-latest
     steps:
       # 下载LSPatch
