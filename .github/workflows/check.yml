@@ -1,0 +1,47 @@
+name: Check for updates
+on:
+  schedule:
+    - cron: '0 * * * *' # run every hour 每小时运行
+jobs:
+  poll_releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Poll releases
+        uses: actions/github-script@v5
+        with:
+          script: |
+            // get the latest release of your repo
+            const my_repo = await github.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const my_repo_latest = my_repo.data[0];
+            const my_repo_date = new Date(my_repo_latest.created_at);
+
+            // define an array of repos to watch
+            const repos = [
+              { owner: 'LSPosed', repo: 'LSPatch' },
+              { owner: 'KitsunePie', repo: 'QQCleaner' },
+              { owner: 'fankes', repo: 'TSBattery' },
+              { owner: 'cinit', repo: 'QAuxiliary' },
+              { owner: 'LuckyPray', repo: 'XAutoDaily' }
+            ];
+
+            // loop through the repos and compare their releases with yours
+            for (const repo of repos) {
+              // get the latest release of the repo
+              const other_repo = await github.repos.listReleases(repo);
+              const other_repo_latest = other_repo.data[0];
+
+              // compare the created_at dates of the two releases
+              const other_repo_date = new Date(other_repo_latest.created_at);
+
+              // if the other repo release is newer, trigger the repository_dispatch event
+              if (other_repo_date > my_repo_date) {
+                await github.request('POST /repos/{owner}/{repo}/dispatches', {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  event_type: `${repo.owner}_${repo.repo}_update`
+                });
+              }
+            }
