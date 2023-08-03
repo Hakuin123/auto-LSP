@@ -55,6 +55,6 @@ jobs:
         with:
           files: QQ-8.9.58-360-lspatched.apk
           tag_name: Release
-          name: QQ Release ${GITHUB_RUN_ID}
+          name: QQ Release ${{GITHUB_RUN_ID}}
           
       - run: echo ${GITHUB_REF}
