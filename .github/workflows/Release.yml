@@ -4,6 +4,9 @@ name: Release
 
 # 控制工作流何时运行
 on:
+  push:
+    branches: [ "main" ]
+
   repository_dispatch:
     types: [new-release]
 
@@ -55,6 +58,7 @@ jobs:
         with:
           files: QQ-8.9.58-360-lspatched.apk
           tag_name: Release
+        env:
           name: 'QQ Release ${GITHUB_RUN_ID}'
 
 
