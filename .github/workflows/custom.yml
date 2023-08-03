@@ -51,13 +51,13 @@ jobs:
       - run: java -jar lspatch.jar QQ-custom.apk -m QAuxiliary.apk,XAutoDaily.apk,TSBattery.apk,QQCleaner.apk
 
       # 发布Release以便下载
-      - name: 发布Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: QQ-custom-lspatched.apk
-          tag_name: Custom
-          name: QQ Custom
-          body: 仅在此发布最新修补的自定义版本 版本号：${{ inputs.version }}
+      #- name: 发布Release
+      #  uses: softprops/action-gh-release@v1
+      #  with:
+      #    files: QQ-custom-lspatched.apk
+      #    tag_name: Custom
+      #    name: QQ Custom
+      #    body: 仅在此发布最新修补的自定义版本 版本号：${{ inputs.version }}
 
       # 上传修补完成的文件
       - name: 上传修补完成的文件
