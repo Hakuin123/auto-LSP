@@ -28,17 +28,17 @@ jobs:
       # 官方直链  run: wget -O QQ8.9.58. https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
         run: wget -O QQ8.9.58.apk https://github.com/Hakuin123/MQGA/releases/download/READY/QQ_8.9.58_64_HB2.apk
 
-      # 下载模块
+      # 使用GitHub CLI下载模块最新版本
       - name: 下载模块
         run: |
-          wget -O XAutoDaily.apk https://github.com/LuckyPray/XAutoDaily/releases/download/v3.0.19/XAutoDaily_3.0.19.apk
-          wget -O QAuxiliary.apk https://github.com/cinit/QAuxiliary/releases/download/v1.4.2/QAuxv-v1.4.2.r1659.fd171b1-arm64.apk
-          wget -O TSBattery.apk https://github.com/fankes/TSBattery/releases/latest/download/app-release.apk
-          wget -O QQCleaner.apk https://github.com/KitsunePie/QQCleaner/releases/latest/download/app-release.apk
+          gh release download -O QAuxiliary.apk --repo cinit/QAuxiliary     --pattern '*-arm64.apk'
+          gh release download -O XAutoDaily.apk --repo LuckyPray/XAutoDaily --pattern '*.apk'
+          gh release download -O TSBattery.apk  --repo fankes/TSBattery     --pattern 'app-release.apk'
+          gh release download -O QQCleaner.apk  --repo KitsunePie/QQCleaner --pattern 'app-release.apk'
 
       # 修补
       - name: RUN
-        run: java -jar lspatch.jar QQ8.9.58.apk -m XAutoDaily.apk -m QAuxiliary.apk -m TSBattery.apk -m QQCleaner.apk
+        run: java -jar lspatch.jar QQ8.9.58.apk -m QAuxiliary.apk,XAutoDaily.apk,QAuxiliary.apk,TSBattery.apk,QQCleaner.apk
 
 
       # 上传修补完成的文件
