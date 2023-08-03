@@ -48,7 +48,9 @@ jobs:
 
       # 修补
       - name: RUN
-        run: java -jar lspatch.jar QQ8.9.58.apk -m XAutoDaily.apk QAuxiliary.apk TSBattery.apk QQCleaner.apk
+        run: java -jar lspatch.jar QQ8.9.58.apk -m XAutoDaily.apk -m QAuxiliary.apk -m TSBattery.apk -m QQCleaner.apk
+
+      - run: java -jar lspatch.jar
 
       # 上传修补完成的文件
       - uses: actions/upload-artifact@v3
