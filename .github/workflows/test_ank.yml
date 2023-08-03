@@ -37,6 +37,8 @@ jobs:
           echo "hello word"> test.txt
           pwd
           ls -a
+
+      - run: gh --version
           
       - uses: actions/upload-artifact@v3
         with:
