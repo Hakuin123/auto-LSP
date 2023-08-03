@@ -35,8 +35,6 @@ jobs:
           pwd
           ls -a
       
-      - run: |
-          curl -L -H "Authorization: token $token" -o action_file.zip $(curl -H "Authorization: token $token" https://api.github.com/repos/$owner/$repo/actions/runs/$(gh run list -w $(gh workflow list | grep main | cut -f1) --json id,created_at | jq -r 'sort_by(.created_at) | reverse | .[0].id')/artifacts | jq -r '.artifacts[].archive_download_url')
 
 
 
