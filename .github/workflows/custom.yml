@@ -1,4 +1,4 @@
-name: Custom
+name: Custom ${{ secrets.GITHUB_TOKEN }}
 
 # 控制工作流何时运行
 on:
