@@ -52,6 +52,6 @@ jobs:
       # 提交Release以便下载
       - name: Release
         uses: softprops/action-gh-release@v1
-        i-f: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: QQ-8.9.58-360-lspatched.apk
