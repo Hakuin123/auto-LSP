@@ -62,7 +62,7 @@ jobs:
   
   build-latest:
     name: build latest version
-    need: build-8958
+    needs: build-8958
     runs-on: ubuntu-latest
     steps:
       - name: Download LSPatch
