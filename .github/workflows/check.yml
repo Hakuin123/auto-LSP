@@ -36,6 +36,17 @@ jobs:
                   owner: 'Hakuin123', # 指定目标仓库的所有者
                   repo: 'auto-LSP', # 指定目标仓库的名称
                   event_type: 'new-release', # 指定事件类型，可以自定义
+                  await github.repos.createDispatchEvent({ # 调用 GitHub API 来发送一个 repository_dispatch 事件到目标仓库
+                    owner: 'Hakuin123', # 指定目标仓库的所有者
+                    repo: 'auto-LSP', # 指定目标仓库的名称
+                    event_type: 'new-release', # 指定事件类型，可以自定义
+                    client_payload: { # 添加 client_payload 参数
+                      repo, # 传递监听到更新的仓库名称
+                      release_name: response.data.name, # 传递最新的 release 名称
+                      release_url: response.data.html_url, # 传递最新的 release 链接
+                      release_tag: response.data.tag_name # 传递最新的 release 标签
+                    }
+                  });
                 });
               }
             }
