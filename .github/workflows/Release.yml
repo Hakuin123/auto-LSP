@@ -58,8 +58,7 @@ jobs:
         with:
           files: QQ-8.9.58-360-lspatched.apk
           tag_name: Release
-        env:
-          name: 'QQ Release ${GITHUB_RUN_ID}'
-
+          name: QQ Release
+          body: 仅在此发布最新修补的Release版本
 
       - run: echo ${GITHUB_RUN_ID}
