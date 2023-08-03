@@ -13,18 +13,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       # 下载LSPatch
       - name: Download LSPatch
-        run: wget https://github.com/LSPosed/LSPatch/releases/latest/download/lspatch.jar
+        run: gh release download --repo LSPosed/LSPatch --pattern lspatch.jar
 
       # 下载待修补的应用
       - name: 下载待修补的应用
       # 官方直链  run: wget -O QQ8.9.58. https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.58_64_HB2.apk
         run: gh release download -O QQ-8.9.58.apk --repo Hakuin123/MQGA READY --pattern QQ_8.9.58_64_HB2.apk
-      #  env:
-      #    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 使用GitHub CLI下载模块最新Release版本
       - name: 下载模块
@@ -33,8 +32,8 @@ jobs:
           gh release download -O XAutoDaily.apk --repo LuckyPray/XAutoDaily --pattern '*.apk'
           gh release download -O TSBattery.apk  --repo fankes/TSBattery     --pattern 'app-release.apk'
           gh release download -O QQCleaner.apk  --repo KitsunePie/QQCleaner --pattern 'app-release.apk'
-      #  env:
-      #    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 修补
       - name: RUN
