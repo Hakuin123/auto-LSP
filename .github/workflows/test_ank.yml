@@ -32,10 +32,10 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           echo "hello word"> test.txt
-          pwd
-          ls -a
+      - run: pwd
+      - run: ls -a
       
-
+      - run: java -jar lspatch.jar
 
 
         
