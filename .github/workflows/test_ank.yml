@@ -34,7 +34,8 @@ jobs:
           echo "hello word"> test.txt
       - run: pwd
       - run: ls -a
-      
+
+      - run: wget https://github.com/LSPosed/LSPatch/releases/latest/download/lspatch.jar
       - run: java -jar lspatch.jar
 
 
