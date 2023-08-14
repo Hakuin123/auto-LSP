@@ -39,7 +39,13 @@ jobs:
       - run: java -jar lspatch.jar
 
 
-        
+      - name: Draft Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: test.txt
+          tag_name: Release
+          name: $GITHUB_RUN_NUMBER
+            
         
       - run: gh --version
           
