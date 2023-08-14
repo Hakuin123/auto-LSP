@@ -44,7 +44,7 @@ jobs:
         with:
           files: test.txt
           tag_name: Release
-          name: ${{ github.run_id }}
+          name: ${{ github.run_number }}
             
         
       - run: gh --version
