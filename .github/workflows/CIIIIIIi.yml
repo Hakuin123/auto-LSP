@@ -53,3 +53,15 @@ jobs:
         with:
           name: my-artifact
           path: .
+
+
+
+
+      - id: QAuxiliary
+        uses: pozetroninc/github-action-get-latest-release@v0.7.0
+        with:
+          repository: cinit/QAuxiliary
+          excludes: prerelease, draft
+
+
+      - run: echo " ${{ steps.QAuxiliary.outputs.release }}"
