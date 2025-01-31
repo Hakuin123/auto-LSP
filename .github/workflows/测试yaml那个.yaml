@@ -10,18 +10,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
-    - name: Set up yq
-      uses: mikefarah/yq/setup@v4
-      
     - name: Parse YAML and export to environment
       id: parse_yaml
       run: |
-        # 读取整个YAML文件并解析为JSON
+        # 使用 yq 解析整个 YAML 文件并转换为 JSON
         json=$(yq e 'to_entries | map({(.key): .value}) | add' config.yaml)
         
-        # 将JSON对象转换为环境变量格式
+        # 将 JSON 对象转换为环境变量格式并写入 $GITHUB_ENV
         echo "$json" | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' >> $GITHUB_ENV
-      
+      uses: mikefarah/yq@v4.45.1
+
     - name: Conditional step (controlled by YAML)
       if: ${{ fromJSON(env.enable_step) }}
       run: |
