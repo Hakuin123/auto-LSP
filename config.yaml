@@ -1,0 +1,4 @@
+enable_step: true
+env_vars:
+  MESSAGE: "Hello from config.yaml!"
+  ANOTHER_VAR: "Another value"
