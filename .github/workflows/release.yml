@@ -152,7 +152,7 @@ jobs:
           java-version: '17'
 
       # 下载必要资源
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: version-info
           path: .
