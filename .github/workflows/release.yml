@@ -131,7 +131,7 @@ jobs:
           fi
 
       # ============= 上传版本信息 =============
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: steps.version_check.outputs.build_needed == 'true'
         with:
             name: version-info
