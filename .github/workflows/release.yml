@@ -157,7 +157,7 @@ jobs:
 
       - name: Download Custom QQ 下载自定义 QQ 版本
         run: gh release download -O QQ-8.9.58.apk --repo Hakuin123/MQGA READY --pattern QQ_8.9.58_64_HB2.apk
-        # 可以更改此处以自定义需要修补的 QQ 版本
+        # 可以更改此处以自定义需要修补的 QQ 版本，可以添加多个（统一打包并上传）
 
       - name: Download Latest QQ 下载最新版 QQ
         run: |
@@ -190,19 +190,19 @@ jobs:
             *-lspatched.apk
             versions.json
           tag_name: ${{ github.run_id }} # 存储库中每个工作流运行的唯一编号
-          name: QQ Release ${{ needs.check-updates.outputs.QQ_version }} # 仓库中特定工作流程每个运行的唯一编号（从 1 开始递增）
+          name: QQ Release ${{ needs.check-updates.outputs.QQ_version }} # 使用 QQ 版本号作为标题
           body: |
-            仅在此发布最新修补的Release版本，标有“latest”的是基于最新版本QQ修补的版本。
-
-            ### 本次打包使用的模块
-            | 模块名称 | 模块版本 | 查看项目 |
+            ### 本次修补使用的项目（不含自定义 QQ 版本）
+            | 项目名称 | 对应版本 | 查看项目 |
             | ------- | -------- | ------- |
-            | QAuxiliary | ${{ needs.check-updates.outputs.QAuxiliary_version }} | [点击跳转](https://github.com/cinit/QAuxiliary) |
-            | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [点击跳转](https://github.com/LuckyPray/XAutoDaily) |
-            | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [点击跳转](https://github.com/fankes/TSBattery) |
-            | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [点击跳转](https://github.com/KitsunePie/QQCleaner) |
+            | QQ 最新版本 | ${{ needs.check-updates.outputs.QQ_version }}         | [QQ 官网](https://im.qq.com/index)|
+            | QAuxiliary | ${{ needs.check-updates.outputs.QAuxiliary_version }} | [GitHub](https://github.com/cinit/QAuxiliary) |
+            | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |
+            | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [GitHub](https://github.com/fankes/TSBattery) |
+            | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [GitHub](https://github.com/KitsunePie/QQCleaner) |
+            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/LSPosed/LSPatch)]
 
-            <details><summary>点击展开模块更新详情</summary>
+            <details><summary>点击展开模块更新日志</summary>
             #### QAuxiliary<br>
             ${{ needs.check-updates.outputs.QAuxiliary_description }}
             #### XAutoDaily<br>
@@ -211,5 +211,15 @@ jobs:
             ${{ needs.check-updates.outputs.TSBattery_description }}
             #### QQCleaner<br>
             ${{ needs.check-updates.outputs.QQCleaner_description }}
-            #### [LSPatch](https://github.com/LSPosed/LSPatch)版本：${{ needs.check-updates.outputs.LSPatch_version }}
             </details>
+
+            ### 发行说明
+            您应该会在页面下方的 Assets 看到如下文件：
+            - QQ-`版本号`-`LSPatch 内部版本号`-lspatched.apk
+                此为自定义版本号修补的 QQ Android 版本
+            - QQ-${{ needs.check-updates.outputs.QQ_version }}-latest-`LSPatch 内部版本号`-lspatched.apk
+                此为基于 QQ Android 当前最新版本修补的版本
+            - versions.json
+                此为本次修补使用的版本信息
+
+            **Have fun!**
