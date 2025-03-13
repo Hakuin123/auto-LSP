@@ -1,0 +1,25 @@
+custom:
+  enable: true
+  # 选择是否修补自定义版本 QQ
+
+  QQ_download_link: "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_9.1.31_64.apk"
+  # 自定义 QQ 版本下载链接
+
+  LSPatch_repo: "LSPosed/LSPatch"
+  # 选择使用的 LSPatch 项目（需在 releases 中提供 .jar 文件）
+  # JingMatrix 维护的 LSPatch 分支已适配 Android 15，若在高版本遇到兼容性问题可考虑使用
+  # 将字段 LSPosed/LSPatch 更改为 JingMatrix/LSPatch 即可（使用该分支产生的后果请自负）
+
+  modules:
+    QAuxiliary: true
+    XAutoDaily: true
+    TSBattery: true
+    QQCleaner: false
+
+  ci_channel: true
+  # （待开发功能）选择是否使用模块的最新CI构建版本（不稳定，一般不推荐开启）
+
+latest:
+  enable: true
+# 选择是否修补最新版 QQ
+# 最新版 QQ 可能包含一些会使得模块功能失效的更改，视情况启用
