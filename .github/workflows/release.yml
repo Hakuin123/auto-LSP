@@ -150,6 +150,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Set ENV values from YAML
+        uses: dcarbone/yaml-to-env-action@v3
+        with:
+          yaml-file: config.yml
+
       # 下载版本记录资源
       - uses: actions/download-artifact@v4
         with:
@@ -180,10 +185,18 @@ jobs:
           gh release download -O TSBattery.apk  --repo fankes/TSBattery     --pattern '*.apk'
           gh release download -O QQCleaner.apk  --repo KitsunePie/QQCleaner --pattern '*.apk'
 
+      - name: Download Custom Modules 下载自定义模块
+        if: ENV.CUSTOM_MODULES_CUSTOM == 'true'
+        run: wget -U "Mozilla/5.0" -O custom-module.apk "${{ ENV.CUSTOM_MODULES_DOWMLOAD_LINK }}"
+        
       # 开始修补 QQ
       - name: Patch QQ 修补各版本 QQ
-        run: java -jar LSPatch.jar QQ-*.apk -m QAuxiliary.apk,XAutoDaily.apk,TSBattery.apk,QQCleaner.apk -l 2
-
+        run: |
+         if "${{ ENV.CUSTOM_MODULES_CUSTOM }}" == "true" ; then
+           java -jar LSPatch.jar QQ-*.apk -m QAuxiliary.apk,XAutoDaily.apk,TSBattery.apk,QQCleaner.apk,custom-module.apk -l 2
+         else
+           java -jar LSPatch.jar QQ-*.apk -m QAuxiliary.apk,XAutoDaily.apk,TSBattery.apk,QQCleaner.apk -l 2
+         fi
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -193,7 +206,7 @@ jobs:
           tag_name: ${{ github.run_id }} # 存储库中每个工作流运行的唯一编号
           name: QQ Release ${{ needs.check-updates.outputs.QQ_version }} # 使用 QQ 版本号作为标题
           body: |
-            ### 本次修补使用的项目（不含自定义 QQ 版本）
+            ### 本次修补使用的项目（不含自定义 QQ/模块）
             | 项目名称 | 对应版本 | 查看项目 |
             | ------- | -------- | ------- |
             | QQ 最新版本 | ${{ needs.check-updates.outputs.QQ_version }}         | [QQ 官网](https://im.qq.com/index)|
