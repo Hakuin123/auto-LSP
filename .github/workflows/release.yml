@@ -187,8 +187,8 @@ jobs:
 
       - name: Download Custom Modules 下载自定义模块
         if: ENV.CUSTOM_MODULES_CUSTOM == 'true'
-        run: wget -U "Mozilla/5.0" -O custom-module.apk "${{ ENV.CUSTOM_MODULES_DOWMLOAD_LINK }}"
-        
+        run: wget -U "Mozilla/5.0" -O custom-module.apk "${{ ENV.CUSTOM_MODULES_DOWNLOAD_LINK }}"
+
       # 开始修补 QQ
       - name: Patch QQ 修补各版本 QQ
         run: |
