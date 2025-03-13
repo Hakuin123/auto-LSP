@@ -47,6 +47,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set ENV values from YAML
+        uses: dcarbone/yaml-to-env-action@v3
+        with:
+          yaml-file: config.yml
+
       # 模块版本检测
       - id: QAuxiliary
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
@@ -79,7 +84,7 @@ jobs:
       - id: LSPatch
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
-          repository: LSPosed/LSPatch
+          repository: ${{ GITHUB.ENV.custom_LSPatch_repo }}
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -152,7 +157,9 @@ jobs:
           path: .
 
       - name: Download Custom QQ 下载自定义 QQ 版本
-        run: gh release download -O QQ-8.9.58.apk --repo Hakuin123/MQGA READY --pattern QQ_8.9.58_64_HB2.apk
+        run: |
+          wget -U "Mozilla/5.0" -O QQ-custom.apk "${{ GITHUB.ENV.QQ_download_link }}"
+        # gh release download -O QQ-8.9.58.apk --repo Hakuin123/MQGA READY --pattern QQ_8.9.58_64_HB2.apk
         # 可以更改此处以自定义需要修补的 QQ 版本，可以添加多个（统一打包并上传）
 
       - name: Download Latest QQ 下载最新版 QQ
@@ -163,9 +170,7 @@ jobs:
 
       # 下载LSPatch
       - name: Download LSPatch 下载LSPatch
-        run: gh release download -O LSPatch.jar --repo LSPosed/LSPatch --pattern '*.jar'
-        # JingMatrix 维护的 LSPatch 分支已适配 Android 15，若在高版本遇到兼容性问题可考虑使用
-        # 将字段 LSPosed/LSPatch 更改为 JingMatrix/LSPatch 即可，建议使用全文查找替换（使用该分支产生的后果请自负）
+        run: gh release download -O LSPatch.jar --repo ${{ GITHUB.ENV.custom_LSPatch_repo }} --pattern '*.jar'
 
       # 下载模块
       - name: Download Modules 下载模块
@@ -196,7 +201,7 @@ jobs:
             | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |
             | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [GitHub](https://github.com/fankes/TSBattery) |
             | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [GitHub](https://github.com/KitsunePie/QQCleaner) |
-            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/LSPosed/LSPatch)]
+            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ GITHUB.ENV.custom_LSPatch_repo }})]
 
             <details><summary>点击展开模块更新日志</summary>
             #### QAuxiliary<br>
