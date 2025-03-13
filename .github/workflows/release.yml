@@ -84,7 +84,7 @@ jobs:
       - id: LSPatch
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
-          repository: $custom_LSPatch_repo
+          repository: ${{ ENV.CUSTOM_LSPATCH_REPO }}
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
 
