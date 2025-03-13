@@ -201,7 +201,7 @@ jobs:
             | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |
             | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [GitHub](https://github.com/fankes/TSBattery) |
             | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [GitHub](https://github.com/KitsunePie/QQCleaner) |
-            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ GITHUB.ENV.custom_LSPatch_repo }})]
+            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ ENV.custom_LSPatch_repo }})]
 
             <details><summary>点击展开模块更新日志</summary>
             #### QAuxiliary<br>
