@@ -84,7 +84,7 @@ jobs:
       - id: LSPatch
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
-          repository: ${{ GITHUB.ENV.CUSTOM_LSPATCH_REPO }}
+          repository: ${{ ENV.CUSTOM_LSPATCH_REPO }}
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -170,7 +170,7 @@ jobs:
 
       # 下载LSPatch
       - name: Download LSPatch 下载LSPatch
-        run: gh release download -O LSPatch.jar --repo ${{ GITHUB.ENV.CUSTOM_LSPATCH_REPO }} --pattern '*.jar'
+        run: gh release download -O LSPatch.jar --repo ${{ ENV.CUSTOM_LSPATCH_REPO }} --pattern '*.jar'
 
       # 下载模块
       - name: Download Modules 下载模块
