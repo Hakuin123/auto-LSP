@@ -1,0 +1,41 @@
+name: YAML to Env Example Workflow
+
+on:
+
+    
+  # 仅供测试：每次提交时运行工作流
+  push:
+    branches: ["main"]
+
+
+  workflow_dispatch:
+    inputs:
+      yaml-file:
+        type: string
+        required: false
+        description: "Path to YAML file to parse"
+        default: "test-values.yaml"
+      yq-version:
+        type: string
+        required: false
+        description: "Version of yq to install, if not already"
+      mask-values:
+        type: string
+        required: false
+        default: "false"
+        description: "Add value masking to all exported environment variable values (https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#example-masking-an-environment-variable)"
+
+jobs:
+  yaml-to-env:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set ENV values from YAML
+        uses: dcarbone/yaml-to-env-action@v3
+        with:
+          yaml-file: config.yml
+
+      - name: Print environment variables
+        run: |
+          printenv
