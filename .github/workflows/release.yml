@@ -84,7 +84,7 @@ jobs:
       - id: LSPatch
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
-          repository: ${{ ENV.CUSTOM_LSPATCH_REPO }}
+          repository: ${{ GITHUB.ENV.CUSTOM_LSPATCH_REPO }}
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -158,7 +158,7 @@ jobs:
 
       - name: Download Custom QQ 下载自定义 QQ 版本
         run: |
-          wget -U "Mozilla/5.0" -O QQ-custom.apk "${{ GITHUB.ENV.QQ_download_link }}"
+          wget -U "Mozilla/5.0" -O QQ-custom.apk "${{ ENV.CUSTOM_QQ_DOWNLOAD_LINK }}"
         # gh release download -O QQ-8.9.58.apk --repo Hakuin123/MQGA READY --pattern QQ_8.9.58_64_HB2.apk
         # 可以更改此处以自定义需要修补的 QQ 版本，可以添加多个（统一打包并上传）
 
@@ -170,7 +170,7 @@ jobs:
 
       # 下载LSPatch
       - name: Download LSPatch 下载LSPatch
-        run: gh release download -O LSPatch.jar --repo ${{ GITHUB.ENV.custom_LSPatch_repo }} --pattern '*.jar'
+        run: gh release download -O LSPatch.jar --repo ${{ GITHUB.ENV.CUSTOM_LSPATCH_REPO }} --pattern '*.jar'
 
       # 下载模块
       - name: Download Modules 下载模块
