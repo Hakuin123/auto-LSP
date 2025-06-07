@@ -198,6 +198,11 @@ jobs:
         if: ENV.CUSTOM_MODULES_CUSTOM == 'true'
         run: wget -q -U "Mozilla/5.0" -O custom-module.apk "${{ ENV.CUSTOM_MODULES_DOWNLOAD_LINK }}"
 
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.1
+        with:
+          java-version: '21
+
       # 开始修补 QQ
       - name: Patch QQ 修补各版本 QQ
         run: |
