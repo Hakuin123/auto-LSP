@@ -1,5 +1,5 @@
 custom:
-  enable: true        # 选项：true | false
+  enable: false        # 选项：true | false
   # 选择是否修补自定义版本 QQ
 
   QQ_download_link: "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_9.1.31_64.apk"
@@ -13,7 +13,7 @@ custom:
 
   modules:
     # 示例：下载 MicroBlock 的 TGStickerProvider（参见：https://t.me/microblock_pub/159）
-    custom: true     # 选项：true | false
+    custom: false     # 选项：true | false
     # 是否启用自定义模块下载
     download_link: "https://github.com/Hakuin123/MQGA/releases/download/READY/TGStickerProvider-0.2.1.apk"
     # 自定义模块下载链接（暂时仅支持单个），该模块将在修补时一同加入修补
