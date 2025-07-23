@@ -205,7 +205,7 @@ jobs:
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
-
+          sudo snap install yq
           # 下载所有自定义模块
           index=1
           yq e '.modules.custom.modules[]' config.yml | while read -r module; do
