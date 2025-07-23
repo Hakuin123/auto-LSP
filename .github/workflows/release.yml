@@ -205,16 +205,22 @@ jobs:
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
-          sudo snap install yq
-          # 下载所有自定义模块
-          index=1
-          yq e '.modules.custom.modules[]' config.yml | while read -r module; do
-            if [ -n "$module" ]; then
-              link=$(echo "$module" | yq e '.download_link' -)
-              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
-              index=$((index+1))
-            fi
+          # 安装yq
+          sudo apt-get install -y yq
+          
+          # 获取模块数量
+          count=$(yq e '.modules.custom.modules | length' config.yml)
+          
+          # 遍历下载
+          for ((i=0; i<count; i++)); do
+            name=$(yq e ".modules.custom.modules[$i].name" config.yml)
+            link=$(yq e ".modules.custom.modules[$i].download_link" config.yml)
+            
+            # 替换空格为下划线
+            safe_name=$(echo "$name" | tr ' ' '_')
+            wget -q -U "Mozilla/5.0" -O "custom-module-${safe_name}.apk" "$link"
           done
+
       - name: Patch QQ 修补QQ
         run: |
           # 动态生成模块列表
