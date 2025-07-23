@@ -247,7 +247,10 @@ jobs:
           fi
           
           # 移除开头的逗号并执行修补
-          java -jar LSPatch.jar QQ-*.apk -m "${module_list#","}" -l 2
+          module_list="${module_list#","}"
+
+          # 执行修补
+          java -jar LSPatch.jar QQ-*.apk -m "$module_list" -l 2
 
 
 
