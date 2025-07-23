@@ -257,13 +257,20 @@ jobs:
           # 移除开头的逗号并执行修补
           module_list="${module_list#","}"
 
-          # 将 $module_list 写入 output
-          echo $module_list
+          # 若 module_list 为空，输出提示
+          if [ -z "$module_list" ]; then
+            echo "::warning::No modules selected for patching | 未选择任何模块进行修补"
+          fi
+
+          # 输出到 GITHUB_OUTPUT，使用引号包裹，防止格式问题
           echo "module_list=$module_list" >> $GITHUB_OUTPUT
+          echo "模块列表: $module_list"
 
           # 执行修补
           java -jar LSPatch.jar QQ-*.apk -m "$module_list" -l 2
-      - run: echo ${{ steps.patch_qq.outputs.module_list }}
+      - run: |
+          echo "${{ steps.patch_qq.outputs.module_list }}"
+          
 
       - name: Create Release | 创建 Release
         uses: softprops/action-gh-release@v2
