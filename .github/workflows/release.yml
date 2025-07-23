@@ -206,23 +206,23 @@ jobs:
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
           # 获取模块数量
-          count=$(yq eval '.modules.custom.modules | length' config.yml)
-          echo "Found $count custom modules"
+          count=$(yq eval '.modules.custom.list | length' config.yml)
+          echo "找到 $count 个自定义模块"
           
           # 遍历下载所有自定义模块
           for ((i=0; i<count; i++)); do
-            name=$(yq eval ".modules.custom.modules[$i].name" config.yml)
-            link=$(yq eval ".modules.custom.modules[$i].download_link" config.yml)
+            name=$(yq eval ".modules.custom.list[$i].name" config.yml)
+            url=$(yq eval ".modules.custom.list[$i].url" config.yml)
             
             # 替换文件名中的非法字符
             safe_name=$(echo "$name" | tr ' ' '_' | tr -cd '[:alnum:]-_')
-            echo "Downloading $name from $link"
+            echo "从 $url 下载 $name"
             
-            wget -q -U "Mozilla/5.0" -O "custom-module-${safe_name}.apk" "$link" || echo "::warning::Failed to download $name"
+            wget -q -U "Mozilla/5.0" -O "custom-module-${safe_name}.apk" "$url" || echo "::warning::Failed to download $name 下载 $name 失败"
             
             # 检查文件是否下载成功
             if [ ! -f "custom-module-${safe_name}.apk" ]; then
-              echo "::error::Custom module $name failed to download"
+              echo "::error::Custom module $name failed to download 模块 $name 下载失败"
             fi
           done
 
