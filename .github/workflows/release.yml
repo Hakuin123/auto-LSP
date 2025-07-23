@@ -270,18 +270,22 @@ jobs:
             ### 本次修补使用的项目（不含自定义 QQ/模块）
             | 项目名称 | 对应版本 | 查看项目 |
             | ------- | -------- | ------- |
-            | QQ 最新版本 | ${{ needs.check-updates.outputs.QQ_version }}         | [QQ 官网](https://im.qq.com/index) |
-            ${{ env.MODULES_QAUXILIARY == 'true' && format('| QAuxiliary | {0} | [GitHub](https://github.com/cinit/QAuxiliary) |', needs.check-updates.outputs.QAuxiliary_version) || '' }}
-            ${{ env.MODULES_XAUTODAILY == 'true' && format('| XAutoDaily | {0} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |', needs.check-updates.outputs.XAutoDaily_version) || '' }}
-            ${{ env.MODULES_TSBATTERY == 'true' && format('| TSBattery  | {0} | [GitHub](https://github.com/fankes/TSBattery) |', needs.check-updates.outputs.TSBattery_version) || '' }}
-            ${{ env.MODULES_QQCLEANER == 'true' && format('| QQCleaner  | {0} | [GitHub](https://github.com/KitsunePie/QQCleaner) |', needs.check-updates.outputs.QQCleaner_version) || '' }}
+            ${{ join(fromJson('[
+              {"enabled": env.QQ_LATEST_ENABLE, "row": format("| QQ 最新版本 | {0} | [QQ 官网](https://im.qq.com/index) |", needs.check-updates.outputs.QQ_version)},
+              {"enabled": env.MODULES_QAUXILIARY, "row": format("| QAuxiliary | {0} | [GitHub](https://github.com/cinit/QAuxiliary) |", needs.check-updates.outputs.QAuxiliary_version)},
+              {"enabled": env.MODULES_XAUTODAILY, "row": format("| XAutoDaily | {0} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |", needs.check-updates.outputs.XAutoDaily_version)},
+              {"enabled": env.MODULES_TSBATTERY, "row": format("| TSBattery  | {0} | [GitHub](https://github.com/fankes/TSBattery) |", needs.check-updates.outputs.TSBattery_version)},
+              {"enabled": env.MODULES_QQCLEANER, "row": format("| QQCleaner  | {0} | [GitHub](https://github.com/KitsunePie/QQCleaner) |", needs.check-updates.outputs.QQCleaner_version)}
+            ]') | map(select(.enabled == 'true') | .row), '\n') }}
             | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ ENV.LSPATCH_REPO }}) |
 
             <details><summary>点击展开模块更新日志</summary>
-            ${{ env.MODULES_QAUXILIARY == 'true' && format('#### QAuxiliary<br>\n{0}', needs.check-updates.outputs.QAuxiliary_description) || '' }}
-            ${{ env.MODULES_XAUTODAILY == 'true' && format('#### XAutoDaily<br>\n{0}', needs.check-updates.outputs.XAutoDaily_description) || '' }}
-            ${{ env.MODULES_TSBATTERY == 'true' && format('#### TSBattery<br>\n{0}', needs.check-updates.outputs.TSBattery_description) || '' }}
-            ${{ env.MODULES_QQCLEANER == 'true' && format('#### QQCleaner<br>\n{0}', needs.check-updates.outputs.QQCleaner_description) || '' }}
+            ${{ join(fromJson('[
+              {"enabled": env.MODULES_QAUXILIARY, "desc": format("#### QAuxiliary<br>\\n{0}", needs.check-updates.outputs.QAuxiliary_description)},
+              {"enabled": env.MODULES_XAUTODAILY, "desc": format("#### XAutoDaily<br>\\n{0}", needs.check-updates.outputs.XAutoDaily_description)},
+              {"enabled": env.MODULES_TSBATTERY, "desc": format("#### TSBattery<br>\\n{0}", needs.check-updates.outputs.TSBattery_description)},
+              {"enabled": env.MODULES_QQCLEANER, "desc": format("#### QQCleaner<br>\\n{0}", needs.check-updates.outputs.QQCleaner_description)}
+            ]') | map(select(.enabled == 'true') | .desc), '\n') }}
             </details>
 
             ### 发行说明
