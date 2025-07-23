@@ -205,20 +205,25 @@ jobs:
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
-          # 安装yq
-          sudo apt-get install -y yq
-          
           # 获取模块数量
-          count=$(yq e '.modules.custom.modules | length' config.yml)
+          count=$(yq eval '.modules.custom.modules | length' config.yml)
+          echo "Found $count custom modules"
           
-          # 遍历下载
+          # 遍历下载所有自定义模块
           for ((i=0; i<count; i++)); do
-            name=$(yq e ".modules.custom.modules[$i].name" config.yml)
-            link=$(yq e ".modules.custom.modules[$i].download_link" config.yml)
+            name=$(yq eval ".modules.custom.modules[$i].name" config.yml)
+            link=$(yq eval ".modules.custom.modules[$i].download_link" config.yml)
             
-            # 替换空格为下划线
-            safe_name=$(echo "$name" | tr ' ' '_')
-            wget -q -U "Mozilla/5.0" -O "custom-module-${safe_name}.apk" "$link"
+            # 替换文件名中的非法字符
+            safe_name=$(echo "$name" | tr ' ' '_' | tr -cd '[:alnum:]-_')
+            echo "Downloading $name from $link"
+            
+            wget -q -U "Mozilla/5.0" -O "custom-module-${safe_name}.apk" "$link" || echo "::warning::Failed to download $name"
+            
+            # 检查文件是否下载成功
+            if [ ! -f "custom-module-${safe_name}.apk" ]; then
+              echo "::error::Custom module $name failed to download"
+            fi
           done
 
       - name: Patch QQ 修补QQ
