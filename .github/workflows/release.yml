@@ -235,6 +235,7 @@ jobs:
           done
 
       - name: Patch QQ | 修补 QQ
+        id: patch_qq
         run: |
           # 动态生成模块列表
           module_list=""
