@@ -263,7 +263,7 @@ jobs:
 
           # 执行修补
           java -jar LSPatch.jar QQ-*.apk -m "$module_list" -l 2
-      - run: echo ${{ steps.version_check.outputs.module_list }}
+      - run: echo ${{ steps.patch_qq.outputs.module_list }}
 
       - name: Create Release | 创建 Release
         uses: softprops/action-gh-release@v2
