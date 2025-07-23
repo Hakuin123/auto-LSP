@@ -128,7 +128,7 @@ jobs:
 
       # 检查是否强制启用修补
       - name: Force Mode Check 强制修补检查
-        if: env.force == 'true'
+        if: env.FORCE == 'true'
         run: |
           echo "build_needed=true" >> $GITHUB_OUTPUT
           echo "::notice::Forced mode: enabled 强制修补：开启"
@@ -168,12 +168,12 @@ jobs:
           path: .
 
       - name: Download Custom QQ 下载自定义 QQ 版本
-        if: env.custom_enable == 'true'
+        if: env.CUSTOM_ENABLE == 'true'
         run: |
-          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ env.custom_QQ_download_link }}"
+          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ env.CUSTOM_QQ_DOWNLOAD_LINK }}"
 
       - name: Download Latest QQ 下载最新版 QQ
-        if: env.latest_enable == 'true'
+        if: env.LATEST_ENABLE == 'true'
         run: |
           wget -q -U "Mozilla/5.0" -O "QQ-${{ needs.check-updates.outputs.QQ_version }}-latest.apk" \
             $(curl -s -X POST -H "Content-Type: application/json" -d '{"packagename":"com.tencent.mobileqq"}' \
