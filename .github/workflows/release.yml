@@ -43,12 +43,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set ENV values from YAML
+      - name: Set ENV values from config.yml | 从配置文件设置环境变量
         uses: dcarbone/yaml-to-env-action@v3
         with:
           yaml-file: config.yml
 
-      # 模块版本检测
+      # 获取模块版本
       - id: QAuxiliary
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
@@ -93,7 +93,7 @@ jobs:
           echo "QQ_version=$version_name" >> $GITHUB_OUTPUT
 
       # 版本比对逻辑
-      - name: Version Comparison 版本比对
+      - name: Version Comparison 版本对比
         id: version_check
         run: |
           # 获取历史版本号记录
@@ -169,7 +169,7 @@ jobs:
       - name: Download Custom QQ 下载自定义 QQ 版本
         if: ENV.QQ_CUSTOM_ENABLE == 'true'
         run: |
-          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ ENV.QQ_CUSTOM_URL }}"
+          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ ENV.QQ_CUSTOM_DOWNLOAD_LINK }}"
 
       - name: Download Latest QQ 下载最新版 QQ
         if: ENV.QQ_LATEST_ENABLE == 'true'
@@ -181,10 +181,6 @@ jobs:
       # 下载LSPatch
       - name: Download LSPatch 下载LSPatch
         run: gh release download -O LSPatch.jar --repo ${{ ENV.LSPATCH_REPO }} --pattern '*.jar'
-
-
-
-
 
       - name: Download Preset Modules 下载预设模块
         run: |
@@ -251,16 +247,6 @@ jobs:
 
           # 执行修补
           java -jar LSPatch.jar QQ-*.apk -m "$module_list" -l 2
-
-
-
-
-
-
-
-
-
-
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
