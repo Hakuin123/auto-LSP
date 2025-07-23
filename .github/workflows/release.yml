@@ -80,7 +80,7 @@ jobs:
       - id: LSPatch
         uses: pozetroninc/github-action-get-latest-release@v0.8.0
         with:
-          repository: ${{ env.LSPATCH_REPO }}
+          repository: ${{ ENV.LSPATCH_REPO }}
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -128,7 +128,7 @@ jobs:
 
       # 检查是否强制启用修补
       - name: Force Mode Check 强制修补检查
-        if: env.FORCE == 'true'
+        if: ENV.FORCE_ENABLE == 'true'
         run: |
           echo "build_needed=true" >> $GITHUB_OUTPUT
           echo "::notice::Forced mode: enabled 强制修补：开启"
@@ -156,7 +156,6 @@ jobs:
           java-version: "21"
 
       - name: Set ENV values from YAML
-        id: yaml_to_env
         uses: dcarbone/yaml-to-env-action@v3
         with:
           yaml-file: config.yml
@@ -168,12 +167,12 @@ jobs:
           path: .
 
       - name: Download Custom QQ 下载自定义 QQ 版本
-        if: env.CUSTOM_ENABLE == 'true'
+        if: ENV.QQ_CUSTOM_ENABLE == 'true'
         run: |
-          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ env.CUSTOM_QQ_DOWNLOAD_LINK }}"
+          wget -q -U "Mozilla/5.0" -O QQ-custom.apk "${{ ENV.QQ_CUSTOM_DOWNLOAD_LINK }}"
 
       - name: Download Latest QQ 下载最新版 QQ
-        if: env.LATEST_ENABLE == 'true'
+        if: ENV.QQ_LATEST_ENABLE == 'true'
         run: |
           wget -q -U "Mozilla/5.0" -O "QQ-${{ needs.check-updates.outputs.QQ_version }}-latest.apk" \
             $(curl -s -X POST -H "Content-Type: application/json" -d '{"packagename":"com.tencent.mobileqq"}' \
@@ -181,85 +180,78 @@ jobs:
 
       # 下载LSPatch
       - name: Download LSPatch 下载LSPatch
-        run: gh release download -O LSPatch.jar --repo ${{ env.LSPATCH_REPO }} --pattern '*.jar'
+        run: gh release download -O LSPatch.jar --repo ${{ ENV.LSPATCH_REPO }} --pattern '*.jar'
 
-      # NEW: 根据配置文件下载模块并准备参数
-      - name: Prepare Modules & Arguments
-        id: prepare_modules
+
+
+
+
+
+
+
+
+      - name: Download Preset Modules 下载预设模块
         run: |
-          MODULE_APKS_PATH=()
-          CUSTOM_MODULES_MD=""
+          # 动态生成模块列表
+          module_list=""
 
-          # --- 处理预设模块 ---
-          if [[ "${{ env.MODULES_QAUXILIARY }}" == "true" ]]; then
-            echo "::notice::Downloading QAuxiliary..."
+          # 动态下载启用的预设模块
+          if [ "${{ env.MODULES_QAUXILIARY }}" = "true" ]; then
             gh release download -O QAuxiliary.apk --repo cinit/QAuxiliary --pattern '*arm64.apk'
-            MODULE_APKS_PATH+=("QAuxiliary.apk")
+            module_list="${module_list},QAuxiliary.apk"
           fi
-          if [[ "${{ env.MODULES_XAUTODAILY }}" == "true" ]]; then
-            echo "::notice::Downloading XAutoDaily..."
+          if [ "${{ env.MODULES_XAUTODAILY }}" = "true" ]; then
             gh release download -O XAutoDaily.apk --repo LuckyPray/XAutoDaily --pattern '*.apk'
-            MODULE_APKS_PATH+=("XAutoDaily.apk")
+            module_list="${module_list},XAutoDaily.apk"
           fi
-          if [[ "${{ env.MODULES_TSBATTERY }}" == "true" ]]; then
-            echo "::notice::Downloading TSBattery..."
+          if [ "${{ env.MODULES_TSBATTERY }}" = "true" ]; then
             gh release download -O TSBattery.apk --repo fankes/TSBattery --pattern '*.apk'
-            MODULE_APKS_PATH+=("TSBattery.apk")
+            module_list="${module_list},TSBattery.apk"
           fi
-          if [[ "${{ env.MODULES_QQCLEANER }}" == "true" ]]; then
-            echo "::notice::Downloading QQCleaner..."
+          if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then
             gh release download -O QQCleaner.apk --repo KitsunePie/QQCleaner --pattern '*.apk'
-            MODULE_APKS_PATH+=("QQCleaner.apk")
+            module_list="${module_list},QQCleaner.apk"
           fi
 
-          # --- 处理自定义模块 ---
-          i=0
-          while true; do
-            NAME_VAR="MODULES_CUSTOM_${i}_NAME"
-            URL_VAR="MODULES_CUSTOM_${i}_DOWNLOAD_LINK"
-            NAME="${!NAME_VAR}"
-            URL="${!URL_VAR}"
-            if [[ -z "$URL" ]]; then break; fi
-            
-            FILENAME=$(basename "$URL")
-            echo "::notice::Downloading custom module '$NAME' ($FILENAME) from '$URL'"
-            wget -q -U "Mozilla/5.0" -O "$FILENAME" "$URL"
-            MODULE_APKS_PATH+=("$FILENAME")
-            CUSTOM_MODULES_MD+="| ${NAME} (自定义) | N/A | [Download Link](${URL}) |\n"
-            i=$((i + 1))
+      - name: Download Custom Modules 下载自定义模块
+        if: env.MODULES_CUSTOM_ENABLE == 'true'
+        run: |
+          # 安装yq用于解析YAML
+          sudo snap install yq
+          
+          # 下载所有自定义模块
+          index=1
+          yq e '.modules.custom.modules[]' config.yml | while read -r module; do
+            if [ -n "$module" ]; then
+              link=$(echo "$module" | yq e '.download_link' -)
+              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
+              index=$((index+1))
+            fi
           done
 
-          if [ ${#MODULE_APKS_PATH[@]} -gt 0 ]; then
-            MODULE_FILES=$(printf ",%s" "${MODULE_APKS_PATH[@]}")
-            MODULE_FILES=${MODULE_FILES:1}
-            echo "::notice::Modules to patch: $MODULE_FILES"
-            echo "module_files=$MODULE_FILES" >> $GITHUB_OUTPUT
-          else
-            echo "::warning::No modules selected for patching."
-            echo "module_files=" >> $GITHUB_OUTPUT
+          # 添加自定义模块到模块列表
+          if [ "${{ env.MODULES_CUSTOM_ENABLE }}" = "true" ]; then
+            for file in custom-module-*.apk; do
+              if [ -f "$file" ]; then
+                module_list="${module_list},$file"
+              fi
+            done
           fi
-          
-          echo "custom_modules_md<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$CUSTOM_MODULES_MD" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
-      # UPDATED: 动态修补QQ
-      - name: Patch QQ 修补各版本 QQ
-        run: |
-          MODULE_ARGS=""
-          if [[ -n "${{ steps.prepare_modules.outputs.module_files }}" ]]; then
-            MODULE_ARGS="-m ${{ steps.prepare_modules.outputs.module_files }}"
-            echo "::notice::Patching with modules: ${{ steps.prepare_modules.outputs.module_files }}"
-          else
-            echo "::warning::No modules selected. Patching without any modules."
-          fi
+      - name: Patch QQ 修补QQ
+        run: java -jar LSPatch.jar QQ-*.apk -m "${module_list#","}" -l 2
+        # 移除模块列表开头的逗号并执行修补
           
-          if ls QQ-*.apk 1> /dev/null 2>&1; then
-              java -jar LSPatch.jar QQ-*.apk $MODULE_ARGS -l 2
-          else
-              echo "::error::No QQ APK file found to patch."
-              exit 1
-          fi
+
+
+
+
+
+
+
+
+
+
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -267,20 +259,18 @@ jobs:
           files: |
             *-lspatched.apk
             versions.json
-          tag_name: ${{ github.run_id }}
-          name: QQ Release ${{ needs.check-updates.outputs.QQ_version }}
+          tag_name: ${{ github.run_id }} # 存储库中每个工作流运行的唯一编号
+          name: QQ Release ${{ needs.check-updates.outputs.QQ_version }} # 使用 QQ 版本号作为标题
           body: |
-            ### 本次修补使用的项目
+            ### 本次修补使用的项目（不含自定义 QQ/模块）
             | 项目名称 | 对应版本 | 查看项目 |
             | ------- | -------- | ------- |
-            ${{ env.CUSTOM_ENABLE == 'true' && format('| QQ (自定义) | {0} | [Download Link]({1}) |', env.CUSTOM_VERSION_NAME, env.CUSTOM_QQ_DOWNLOAD_LINK) || '' }}
-            ${{ env.LATEST_ENABLE == 'true' && format('| QQ (最新版) | {0} | [QQ 官网](https://im.qq.com/index) |', needs.check-updates.outputs.QQ_version) || '' }}
+            | QQ 最新版本 | ${{ needs.check-updates.outputs.QQ_version }}         | [QQ 官网](https://im.qq.com/index)|
             | QAuxiliary | ${{ needs.check-updates.outputs.QAuxiliary_version }} | [GitHub](https://github.com/cinit/QAuxiliary) |
             | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |
             | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [GitHub](https://github.com/fankes/TSBattery) |
             | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [GitHub](https://github.com/KitsunePie/QQCleaner) |
-            ${{ steps.prepare_modules.outputs.custom_modules_md }}
-            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ env.LSPATCH_REPO }}) |
+            | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ ENV.LSPATCH_REPO }})
 
             <details><summary>点击展开模块更新日志</summary>
             #### QAuxiliary<br>
