@@ -38,7 +38,7 @@ modules:
 QQ:
   custom:
     enable: true # 选择是否修补自定义版本 QQ
-    download_link: "https://qstory.sacz.top/update/download"
+    url: "https://qstory.sacz.top/update/download"
     # 自定义 QQ 版本下载链接（确保此链接可直接下载文件）
     # 建议使用 Arm64 安装包，否则需手动更改 Acion Workflow 配置文件中 QAuxiliary 的下载文件名后缀
 
