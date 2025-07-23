@@ -271,21 +271,17 @@ jobs:
             | 项目名称 | 对应版本 | 查看项目 |
             | ------- | -------- | ------- |
             | QQ 最新版本 | ${{ needs.check-updates.outputs.QQ_version }}         | [QQ 官网](https://im.qq.com/index) |
-            | QAuxiliary | ${{ needs.check-updates.outputs.QAuxiliary_version }} | [GitHub](https://github.com/cinit/QAuxiliary) |
-            | XAutoDaily | ${{ needs.check-updates.outputs.XAutoDaily_version }} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |
-            | TSBattery  | ${{ needs.check-updates.outputs.TSBattery_version }}  | [GitHub](https://github.com/fankes/TSBattery) |
-            | QQCleaner  | ${{ needs.check-updates.outputs.QQCleaner_version }}  | [GitHub](https://github.com/KitsunePie/QQCleaner) |
+            ${{ env.MODULES_QAUXILIARY == 'true' && format('| QAuxiliary | {0} | [GitHub](https://github.com/cinit/QAuxiliary) |', needs.check-updates.outputs.QAuxiliary_version) || '' }}
+            ${{ env.MODULES_XAUTODAILY == 'true' && format('| XAutoDaily | {0} | [GitHub](https://github.com/LuckyPray/XAutoDaily) |', needs.check-updates.outputs.XAutoDaily_version) || '' }}
+            ${{ env.MODULES_TSBATTERY == 'true' && format('| TSBattery  | {0} | [GitHub](https://github.com/fankes/TSBattery) |', needs.check-updates.outputs.TSBattery_version) || '' }}
+            ${{ env.MODULES_QQCLEANER == 'true' && format('| QQCleaner  | {0} | [GitHub](https://github.com/KitsunePie/QQCleaner) |', needs.check-updates.outputs.QQCleaner_version) || '' }}
             | LSPatch    | ${{ needs.check-updates.outputs.LSPatch_version }}    | [GitHub](https://github.com/${{ ENV.LSPATCH_REPO }}) |
 
             <details><summary>点击展开模块更新日志</summary>
-            #### QAuxiliary<br>
-            ${{ needs.check-updates.outputs.QAuxiliary_description }}
-            #### XAutoDaily<br>
-            ${{ needs.check-updates.outputs.XAutoDaily_description }}
-            #### TSBattery<br>
-            ${{ needs.check-updates.outputs.TSBattery_description }}
-            #### QQCleaner<br>
-            ${{ needs.check-updates.outputs.QQCleaner_description }}
+            ${{ env.MODULES_QAUXILIARY == 'true' && format('#### QAuxiliary<br>\n{0}', needs.check-updates.outputs.QAuxiliary_description) || '' }}
+            ${{ env.MODULES_XAUTODAILY == 'true' && format('#### XAutoDaily<br>\n{0}', needs.check-updates.outputs.XAutoDaily_description) || '' }}
+            ${{ env.MODULES_TSBATTERY == 'true' && format('#### TSBattery<br>\n{0}', needs.check-updates.outputs.TSBattery_description) || '' }}
+            ${{ env.MODULES_QQCLEANER == 'true' && format('#### QQCleaner<br>\n{0}', needs.check-updates.outputs.QQCleaner_description) || '' }}
             </details>
 
             ### 发行说明
