@@ -201,20 +201,19 @@ jobs:
           if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then
             gh release download -O QQCleaner.apk --repo KitsunePie/QQCleaner --pattern '*.apk'
           fi
-
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
+
+          # 下载所有自定义模块
           index=1
           yq e '.modules.custom.list[]' config.yml | while read -r module; do
             if [ -n "$module" ]; then
-              url=$(echo "$module" | yq e '.download_link' -)
-              echo "正在下载模块 $index: $url"
-              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$url"
+              link=$(echo "$module" | yq e '.download_link' -)
+              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
               index=$((index+1))
             fi
           done
-
       - name: Patch QQ 修补QQ
         run: |
           # 动态生成模块列表
