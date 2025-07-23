@@ -271,7 +271,7 @@ jobs:
           name: "QQ Release ${{ needs.check-updates.outputs.QQ_version }} #${{ github.run_number }}" # 使用 QQ 版本号和构建编号作为标题
           body: |
             ### 本次修补使用的模块列表
-            **${{ steps.version_check.outputs.module_list }}**
+            ${{ steps.version_check.outputs.module_list }}
 
             ### 所有默认配置项目的最新版本
             | 项目名称 | 对应版本 | 查看项目 |
