@@ -208,7 +208,7 @@ jobs:
           index=1
           yq e '.modules.custom.list[]' config.yml | while read -r module; do
             if [ -n "$module" ]; then
-              url=$(echo "$module" | yq e '.url' -)
+              url=$(echo "$module" | yq e '.download_link' -)
               echo "正在下载模块 $index: $url"
               wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$url"
               index=$((index+1))
