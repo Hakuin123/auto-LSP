@@ -205,15 +205,12 @@ jobs:
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
-          # # 安装yq用于解析YAML
-          # sudo snap install yq
-          
-          # 下载所有自定义模块
           index=1
-          yq e '.modules.custom.modules[]' config.yml | while read -r module; do
+          yq e '.modules.custom.list[]' config.yml | while read -r module; do
             if [ -n "$module" ]; then
-              link=$(echo "$module" | yq e '.download_link' -)
-              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
+              url=$(echo "$module" | yq e '.url' -)
+              echo "正在下载模块 $index: $url"
+              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$url"
               index=$((index+1))
             fi
           done
