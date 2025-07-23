@@ -201,10 +201,10 @@ jobs:
           if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then
             gh release download -O QQCleaner.apk --repo KitsunePie/QQCleaner --pattern '*.apk'
           fi
+
       - name: Download Custom Modules 下载自定义模块
         if: env.MODULES_CUSTOM_ENABLE == 'true'
         run: |
-
           # 下载所有自定义模块
           index=1
           yq e '.modules.custom.list[]' config.yml | while read -r module; do
