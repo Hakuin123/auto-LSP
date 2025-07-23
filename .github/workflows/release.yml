@@ -186,62 +186,60 @@ jobs:
 
 
 
+- name: Download Preset Modules 下载预设模块
+  run: |
+    # 动态下载启用的预设模块
+    if [ "${{ env.MODULES_QAUXILIARY }}" = "true" ]; then
+      gh release download -O QAuxiliary.apk --repo cinit/QAuxiliary --pattern '*arm64.apk'
+    fi
+    if [ "${{ env.MODULES_XAUTODAILY }}" = "true" ]; then
+      gh release download -O XAutoDaily.apk --repo LuckyPray/XAutoDaily --pattern '*.apk'
+    fi
+    if [ "${{ env.MODULES_TSBATTERY }}" = "true" ]; then
+      gh release download -O TSBattery.apk --repo fankes/TSBattery --pattern '*.apk'
+    fi
+    if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then
+      gh release download -O QQCleaner.apk --repo KitsunePie/QQCleaner --pattern '*.apk'
+    fi
 
+- name: Download Custom Modules 下载自定义模块
+  if: env.MODULES_CUSTOM_ENABLE == 'true'
+  run: |
+    # # 安装yq用于解析YAML
+    # sudo snap install yq
+    
+    # 下载所有自定义模块
+    index=1
+    yq e '.modules.custom.modules[]' config.yml | while read -r module; do
+      if [ -n "$module" ]; then
+        link=$(echo "$module" | yq e '.download_link' -)
+        wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
+        index=$((index+1))
+      fi
+    done
 
-
-
-      - name: Download Preset Modules 下载预设模块
-        run: |
-          # 动态生成模块列表
-          module_list=""
-
-          # 动态下载启用的预设模块
-          if [ "${{ env.MODULES_QAUXILIARY }}" = "true" ]; then
-            gh release download -O QAuxiliary.apk --repo cinit/QAuxiliary --pattern '*arm64.apk'
-            module_list="${module_list},QAuxiliary.apk"
-          fi
-          if [ "${{ env.MODULES_XAUTODAILY }}" = "true" ]; then
-            gh release download -O XAutoDaily.apk --repo LuckyPray/XAutoDaily --pattern '*.apk'
-            module_list="${module_list},XAutoDaily.apk"
-          fi
-          if [ "${{ env.MODULES_TSBATTERY }}" = "true" ]; then
-            gh release download -O TSBattery.apk --repo fankes/TSBattery --pattern '*.apk'
-            module_list="${module_list},TSBattery.apk"
-          fi
-          if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then
-            gh release download -O QQCleaner.apk --repo KitsunePie/QQCleaner --pattern '*.apk'
-            module_list="${module_list},QQCleaner.apk"
-          fi
-
-      - name: Download Custom Modules 下载自定义模块
-        if: env.MODULES_CUSTOM_ENABLE == 'true'
-        run: |
-          # 安装yq用于解析YAML
-          sudo snap install yq
-          
-          # 下载所有自定义模块
-          index=1
-          yq e '.modules.custom.modules[]' config.yml | while read -r module; do
-            if [ -n "$module" ]; then
-              link=$(echo "$module" | yq e '.download_link' -)
-              wget -q -U "Mozilla/5.0" -O "custom-module-$index.apk" "$link"
-              index=$((index+1))
-            fi
-          done
-
-          # 添加自定义模块到模块列表
-          if [ "${{ env.MODULES_CUSTOM_ENABLE }}" = "true" ]; then
-            for file in custom-module-*.apk; do
-              if [ -f "$file" ]; then
-                module_list="${module_list},$file"
-              fi
-            done
-          fi
-
-      - name: Patch QQ 修补QQ
-        run: java -jar LSPatch.jar QQ-*.apk -m "${module_list#","}" -l 2
-        # 移除模块列表开头的逗号并执行修补
-          
+- name: Patch QQ 修补QQ
+  run: |
+    # 动态生成模块列表
+    module_list=""
+    
+    # 添加预设模块
+    if [ "${{ env.MODULES_QAUXILIARY }}" = "true" ]; then module_list="${module_list},QAuxiliary.apk"; fi
+    if [ "${{ env.MODULES_XAUTODAILY }}" = "true" ]; then module_list="${module_list},XAutoDaily.apk"; fi
+    if [ "${{ env.MODULES_TSBATTERY }}" = "true" ]; then module_list="${module_list},TSBattery.apk"; fi
+    if [ "${{ env.MODULES_QQCLEANER }}" = "true" ]; then module_list="${module_list},QQCleaner.apk"; fi
+    
+    # 添加自定义模块
+    if [ "${{ env.MODULES_CUSTOM_ENABLE }}" = "true" ]; then
+      for file in custom-module-*.apk; do
+        if [ -f "$file" ]; then
+          module_list="${module_list},$file"
+        fi
+      done
+    fi
+    
+    # 移除开头的逗号并执行修补
+    java -jar LSPatch.jar QQ-*.apk -m "${module_list#","}" -l 2
 
 
 
